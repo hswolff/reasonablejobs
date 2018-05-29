@@ -3,13 +3,14 @@ let component = ReasonReact.statelessComponent("Header");
 let string = ReasonReact.string;
 
 module Style = {
-  let left = ReactDOMRe.Style.make(~color="#444444", ~fontSize="68px", ());
+  open Css;
+  let left = style([color(hex("444")), fontSize(px(68))]);
 };
 
 let make = _children => {
   ...component,
   render: _self =>
     <UI.Content tagName="header">
-      <div style=Style.left> (string("Reasonable Jobs")) </div>
+      <div className=Style.left> (string("Reasonable Jobs")) </div>
     </UI.Content>,
 };
