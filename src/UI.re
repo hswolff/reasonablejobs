@@ -35,7 +35,7 @@ module Link = {
     };
 
   let make =
-      (~asTag="a", ~href, ~className="", ~activeClass="active", children) => {
+      (~asTag="a", ~href, ~className="", ~activeClassName="active", children) => {
     let isActive = path => getPath(path) == href;
 
     {
@@ -61,7 +61,7 @@ module Link = {
           asTag,
           ~props={
             "href": href,
-            "className": self.state.active ? activeClass : className,
+            "className": self.state.active ? activeClassName : className,
             "onClick": e => {
               ReactEventRe.Mouse.preventDefault(e);
               ReasonReact.Router.push(href);
