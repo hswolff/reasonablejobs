@@ -11,5 +11,8 @@ let make = _children => {
   render: _self =>
     <UI.Content tagName="header">
       <div className=Style.title> (ReasonReact.string("Home Page")) </div>
+      <JobCell title="Job 1" />
+      <br />
+      <JobCell title="Job 2" />
     </UI.Content>,
 };
