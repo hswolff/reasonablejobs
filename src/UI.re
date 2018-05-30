@@ -19,3 +19,22 @@ module Content = {
       ),
   };
 };
+
+module Link = {
+  let component = ReasonReact.statelessComponent("Link");
+  let make = (~asTag="a", ~href, children) => {
+    ...component,
+    render: _self =>
+      ReasonReact.createDomElement(
+        asTag,
+        ~props={
+          "href": href,
+          "onClick": e => {
+            ReactEventRe.Mouse.preventDefault(e);
+            ReasonReact.Router.push(href);
+          },
+        },
+        children,
+      ),
+  };
+};

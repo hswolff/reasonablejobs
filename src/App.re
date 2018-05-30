@@ -1,28 +1,40 @@
-[%bs.raw {|require('./App.css')|}];
+type state = {path: list(string)};
 
-[@bs.module] external logo : string = "./logo.svg";
+type action =
+  | Route(list(string));
 
-let component = ReasonReact.statelessComponent("App");
+let component = ReasonReact.reducerComponent("App");
 
-let make = (~message, _children) => {
+let make = _children => {
   ...component,
-  render: _self =>
+  initialState: () => {
+    path: ReasonReact.Router.dangerouslyGetInitialUrl().path,
+  },
+  reducer: (action, state) =>
+    switch (action) {
+    | Route(path) => ReasonReact.Update({path: path})
+    },
+  didMount: self => {
+    Js.log("Hello");
+    let watcherID =
+      ReasonReact.Router.watchUrl(url => {
+        Js.log(url.path);
+        self.send(Route(url.path));
+      });
+    ();
+    self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
+  },
+  render: self =>
     <div>
       <Header />
       <UI.Content>
         <span> (ReasonReact.string("Content")) </span>
       </UI.Content>
-      <div className="App">
-        <div className="App-header">
-          <img src=logo className="App-logo" alt="logo" />
-          <span> (ReasonReact.string("ok")) </span>
-          <h2> (ReasonReact.string(message)) </h2>
-        </div>
-        <p className="App-intro">
-          (ReasonReact.string("To get started, edit"))
-          <code> (ReasonReact.string(" src/App.re ")) </code>
-          (ReasonReact.string("and save to reload."))
-        </p>
-      </div>
+      (
+        switch (self.state.path) {
+        | ["about"] => <h1> (ReasonReact.string("About Page")) </h1>
+        | _ => <HomePage />
+        }
+      )
     </div>,
 };
