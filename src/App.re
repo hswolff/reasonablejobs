@@ -15,12 +15,8 @@ let make = _children => {
     | Route(path) => ReasonReact.Update({path: path})
     },
   didMount: self => {
-    Js.log("Hello");
     let watcherID =
-      ReasonReact.Router.watchUrl(url => {
-        Js.log(url.path);
-        self.send(Route(url.path));
-      });
+      ReasonReact.Router.watchUrl(url => self.send(Route(url.path)));
     ();
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
   },

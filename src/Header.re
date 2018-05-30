@@ -10,6 +10,7 @@ module Style = {
     style([
       textAlign(center),
       selector(" a", [margin2(~v=px(0), ~h=px(20))]),
+      selector(" a.active", [color(black), textDecoration(none)]),
     ]);
 };
 
