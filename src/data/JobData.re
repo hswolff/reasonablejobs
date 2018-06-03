@@ -18,3 +18,8 @@ type job = {
   position: job_position,
   company: job_company,
 };
+
+type test = {
+  number: int,
+  owner_id: string,
+};
