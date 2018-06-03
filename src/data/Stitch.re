@@ -1,32 +1,30 @@
-type stitchDb;
-type collection;
-type query;
+type tClient;
+type tService;
+type tDb;
+type tCollection;
+type tQuery;
 
 module Client = {
-  type stitchClient;
-  type stitchService;
-
   [@bs.module "mongodb-stitch"] [@bs.scope "StitchClientFactory"]
-  external create : string => Js.Promise.t(stitchClient) = "";
+  external create : string => Js.Promise.t(tClient) = "";
 
-  [@bs.send] external login : stitchClient => Js.Promise.t(unit) = "";
-  [@bs.send] external authedId : stitchClient => string = "";
-  [@bs.send]
-  external service : (stitchClient, string, string) => stitchService = "";
+  [@bs.send] external login : tClient => Js.Promise.t(unit) = "";
+  [@bs.send] external authedId : tClient => string = "";
+  [@bs.send] external service : (tClient, string, string) => tService = "";
 
-  [@bs.send] external db : (stitchService, string) => stitchDb = "";
-  [@bs.send] external collection : (stitchDb, string) => collection = "";
+  [@bs.send] external db : (tService, string) => tDb = "";
+  [@bs.send] external collection : (tDb, string) => tCollection = "";
 };
 
 module Collection = {
-  [@bs.send] external find : (collection, 'findQuery) => query = "";
+  [@bs.send] external find : (tCollection, 'findQuery) => tQuery = "";
   [@bs.send]
   external updateOne :
-    (collection, 'findQuery, 'updateQuery, 'options) =>
+    (tCollection, 'findQuery, 'updateQuery, 'options) =>
     Js.Promise.t(Js.Json.t) =
     "";
 };
 
 module Query = {
-  [@bs.send] external execute : query => Js.Promise.t(Js.Json.t) = "";
+  [@bs.send] external execute : tQuery => Js.Promise.t(Js.Json.t) = "";
 };

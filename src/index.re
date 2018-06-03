@@ -3,8 +3,8 @@
 [@bs.module "./registerServiceWorker"]
 external register_service_worker : unit => unit = "default";
 
-API.createStitchClient();
+API.createStitchClient(() => {
+  ReactDOMRe.renderToElementWithId(<App />, "root");
 
-ReactDOMRe.renderToElementWithId(<App />, "root");
-
-register_service_worker();
+  register_service_worker();
+});

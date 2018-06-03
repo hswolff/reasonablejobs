@@ -1,4 +1,5 @@
-open Stitch;
+let stitchClient: ref(option(Stitch.tClient)) = ref(None);
+let stitchDb: ref(option(Stitch.tDb)) = ref(None);
 
 module Decode = {
   let job = json : JobData.test =>
@@ -17,59 +18,77 @@ type findQuery = {
   owner_id: string,
 };
 
-let fetchJobs = (client, db) => {
-  let owner_id = Client.authedId(client);
+let fetchJobs = () => {
+  let client =
+    switch (stitchClient^) {
+    | Some(c) => c
+    | None => assert(false)
+    };
+  let db =
+    switch (stitchDb^) {
+    | Some(c) => c
+    | None => assert(false)
+    };
+
+  let owner_id = Stitch.Client.authedId(client);
   let query = findQuery(~owner_id, ());
 
-  Client.collection(db, "jobs")
-  |. Collection.updateOne(
-       {"owner_id": owner_id},
-       {
-         "$set": {
-           "number": 44,
+  Stitch.(
+    Client.collection(db, "jobs")
+    |. Collection.updateOne(
+         {"owner_id": owner_id},
+         {
+           "$set": {
+             "number": 44,
+           },
          },
-       },
-       {"upsert": true},
-     )
-  |> ignore;
+         {"upsert": true},
+       )
+    |> ignore
+  );
 
-  Client.collection(db, "jobs")
-  |. Collection.find(query)
-  |. Query.execute
-  |> Js.Promise.then_(result => {
-       Js.log2("hi", result);
+  Stitch.(
+    Client.collection(db, "jobs")
+    |. Collection.find(query)
+    |. Query.execute
+    |> Js.Promise.then_(result => {
+         Js.log2("hi", result);
 
-       let line = result |> Decode.jobs;
-       switch (line) {
-       | [val_] => Js.log2("eh??", val_.number)
-       | _ => Js.log("Empty")
-       };
-       Js.Promise.resolve();
-     });
-};
-
-let createStitchClient = () =>
-  Client.(
-    create("reasonablejobs-kitjl")
-    |> Js.Promise.then_(client => {
-         Js.log("ok");
-         Js.log(client);
-         let db =
-           client |. service("mongodb", "mongodb-atlas") |. db("data");
-         Js.log(db);
-         %raw
-         {| window.client = client|};
-         %raw
-         {| window.db = db|};
-         client
-         |> login
-         |> Js.Promise.then_(() => Js.Promise.resolve((client, db)));
-       })
-    |> Js.Promise.then_(((client, db)) => {
-         fetchJobs(client, db);
+         let line = result |> Decode.jobs;
+         switch (line) {
+         | [val_] => Js.log2("eh??", val_.number)
+         | _ => Js.log("Empty")
+         };
          Js.Promise.resolve();
        })
   );
+};
+
+let createStitchClient = done_ =>
+  Stitch.Client.create("reasonablejobs-kitjl")
+  |> Js.Promise.then_(client => {
+       Js.log2("StitchClient", client);
+       stitchClient := Some(client);
+
+       let db =
+         Stitch.Client.(
+           client |. service("mongodb", "mongodb-atlas") |. db("data")
+         );
+
+       stitchClient := Some(client);
+       stitchDb := Some(db);
+
+       %raw
+       {| window.client = client|};
+       %raw
+       {| window.db = db|};
+
+       client |> Stitch.Client.login;
+     })
+  |> Js.Promise.then_(() => {
+       done_();
+       Js.Promise.resolve();
+     });
 
 %raw
 {|
