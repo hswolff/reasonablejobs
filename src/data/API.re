@@ -18,7 +18,7 @@ type findQuery = {
   owner_id: string,
 };
 
-let fetchJobs = () => {
+let fetchJobs = callback => {
   let client =
     switch (stitchClient^) {
     | Some(c) => c
@@ -55,12 +55,14 @@ let fetchJobs = () => {
          Js.log2("hi", result);
 
          let line = result |> Decode.jobs;
+         callback(line);
          switch (line) {
          | [val_] => Js.log2("eh??", val_.number)
          | _ => Js.log("Empty")
          };
          Js.Promise.resolve();
        })
+    |> ignore
   );
 };
 
