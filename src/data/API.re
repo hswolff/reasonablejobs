@@ -8,7 +8,7 @@ module Decode = {
       owner_id: json |> field("owner_id", string),
     };
 
-  let jobs = json => json |> Json.Decode.list(job);
+  let jobs = json => json |> Json.Decode.array(job);
 };
 
 [@bs.deriving abstract]
@@ -56,10 +56,7 @@ let fetchJobs = callback => {
 
          let line = result |> Decode.jobs;
          callback(line);
-         switch (line) {
-         | [val_] => Js.log2("eh??", val_.number)
-         | _ => Js.log("Empty")
-         };
+
          Js.Promise.resolve();
        })
     |> ignore
