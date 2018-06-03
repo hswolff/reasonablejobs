@@ -28,3 +28,25 @@ module Collection = {
 module Query = {
   [@bs.send] external execute : tQuery => Js.Promise.t(Js.Json.t) = "";
 };
+
+%raw
+{|
+/**
+const stitch = require('mongodb-stitch');
+window.stitch = stitch;
+const clientPromise = stitch.StitchClientFactory.create('reasonablejobs-kitjl');
+clientPromise.then(client => {
+  const db = client.service('mongodb', 'mongodb-atlas').db('data');
+  client.login().then(() =>
+    db.collection('jobs').updateOne({owner_id: client.authedId()}, {$set:{number:42}}, {upsert:true})
+  ).then(() =>
+    db.collection('jobs').find({owner_id: client.authedId()}).limit(100).execute()
+  ).then(docs => {
+    console.log("Found docs", docs)
+    console.log("[MongoDB Stitch] Connected to Stitch")
+  }).catch(err => {
+    console.error(err)
+  });
+});
+**/
+|};

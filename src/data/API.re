@@ -18,17 +18,21 @@ type findQuery = {
   owner_id: string,
 };
 
+let getClient = () =>
+  switch (stitchClient^) {
+  | Some(c) => c
+  | None => assert(false)
+  };
+
+let getDb = () =>
+  switch (stitchDb^) {
+  | Some(c) => c
+  | None => assert(false)
+  };
+
 let fetchJobs = callback => {
-  let client =
-    switch (stitchClient^) {
-    | Some(c) => c
-    | None => assert(false)
-    };
-  let db =
-    switch (stitchDb^) {
-    | Some(c) => c
-    | None => assert(false)
-    };
+  let client = getClient();
+  let db = getDb();
 
   let owner_id = Stitch.Client.authedId(client);
   let query = findQuery(~owner_id, ());
@@ -88,25 +92,3 @@ let createStitchClient = done_ =>
        done_();
        Js.Promise.resolve();
      });
-
-%raw
-{|
-/**
-const stitch = require('mongodb-stitch');
-window.stitch = stitch;
-const clientPromise = stitch.StitchClientFactory.create('reasonablejobs-kitjl');
-clientPromise.then(client => {
-  const db = client.service('mongodb', 'mongodb-atlas').db('data');
-  client.login().then(() =>
-    db.collection('jobs').updateOne({owner_id: client.authedId()}, {$set:{number:42}}, {upsert:true})
-  ).then(() =>
-    db.collection('jobs').find({owner_id: client.authedId()}).limit(100).execute()
-  ).then(docs => {
-    console.log("Found docs", docs)
-    console.log("[MongoDB Stitch] Connected to Stitch")
-  }).catch(err => {
-    console.error(err)
-  });
-});
-**/
-|};
