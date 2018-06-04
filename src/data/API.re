@@ -56,10 +56,7 @@ let fetchJobs = callback => {
     |. Collection.find(query)
     |. Query.execute
     |> Js.Promise.then_(result => {
-         Js.log2("hi", result);
-
-         let line = result |> Decode.jobs;
-         callback(line);
+         callback(result |> Decode.jobs);
 
          Js.Promise.resolve();
        })
@@ -70,7 +67,6 @@ let fetchJobs = callback => {
 let createStitchClient = done_ =>
   Stitch.Client.create("reasonablejobs-kitjl")
   |> Js.Promise.then_(client => {
-       Js.log2("StitchClient", client);
        stitchClient := Some(client);
 
        let db =

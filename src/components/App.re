@@ -28,7 +28,7 @@ let make = _children => {
       </UI.Content>
       (
         switch (self.state.path) {
-        | ["about"] => <h1> (ReasonReact.string("About Page")) </h1>
+        | ["job", "post"] => <CreateJobPage />
         | _ => <HomePage />
         }
       )

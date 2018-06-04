@@ -21,7 +21,9 @@ let make = _children => {
       <div className=Style.title> (string("Reasonable Jobs")) </div>
       <nav className=Style.nav>
         <UI.Link href="/"> (ReasonReact.string("Home")) </UI.Link>
-        <UI.Link href="/about"> (ReasonReact.string("About")) </UI.Link>
+        <UI.Link href="/job/post">
+          (ReasonReact.string("Post a Job"))
+        </UI.Link>
       </nav>
     </UI.Content>,
 };
