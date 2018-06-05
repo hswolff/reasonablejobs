@@ -37,7 +37,7 @@ module Query = {
   [@bs.send] external execute : tQuery => Js.Promise.t(Js.Json.t) = "";
 };
 
-[@bs.send] external toString : Js.Json.t => option(string) = "";
+[@bs.send] external toString : Js.Json.t => string = "";
 
 %raw
 {|

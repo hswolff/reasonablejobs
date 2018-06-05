@@ -70,7 +70,8 @@ module Decode = {
 
   let job = json =>
     Json.Decode.{
-      id: json |> field("_id", map(val_ => val_, Stitch.toString)),
+      id:
+        json |> field("_id", map(val_ => val_, optional(Stitch.toString))),
       dateCreated:
         switch (json |> field("dateCreated", optional(string))) {
         | exception (DecodeError(v)) => Some(v)

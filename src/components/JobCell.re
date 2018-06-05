@@ -16,7 +16,6 @@ module Style = {
 };
 
 let make = (~job: JobData.job, _children) => {
-  Js.log(job.id);
   let delete = _e =>
     switch (job.id) {
     | Some(id) =>

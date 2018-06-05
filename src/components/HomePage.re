@@ -30,9 +30,7 @@ let make = _children => {
              <JobCell
                key=(
                  switch (job.id) {
-                 | Some(id) =>
-                   Js.log(id);
-                   id;
+                 | Some(id) => id
                  | None => string_of_int(index)
                  }
                )
