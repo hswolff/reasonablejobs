@@ -1,16 +1,6 @@
 let stitchClient: ref(option(Stitch.tClient)) = ref(None);
 let stitchDb: ref(option(Stitch.tDb)) = ref(None);
 
-module Decode = {
-  let job = json : JobData.test =>
-    Json.Decode.{
-      number: json |> field("number", int),
-      owner_id: json |> field("owner_id", string),
-    };
-
-  let jobs = json => json |> Json.Decode.array(job);
-};
-
 [@bs.deriving abstract]
 type findQuery = {
   [@bs.optional]
@@ -30,38 +20,65 @@ let getDb = () =>
   | None => assert(false)
   };
 
-let fetchJobs = callback => {
-  let client = getClient();
-  let db = getDb();
+module Job = {
+  let getAll = callback => {
+    let client = getClient();
+    let db = getDb();
 
-  let owner_id = Stitch.Client.authedId(client);
-  let query = findQuery(~owner_id, ());
+    let owner_id = Stitch.Client.authedId(client);
+    let query = findQuery(~owner_id, ());
 
-  Stitch.(
-    Client.collection(db, "jobs")
-    |. Collection.updateOne(
-         {"owner_id": owner_id},
-         {
-           "$set": {
-             "number": 44,
-           },
-         },
-         {"upsert": true},
-       )
-    |> ignore
-  );
+    /* Stitch.(
+         Client.collection(db, "jobs")
+         |. Collection.updateOne(
+              {"owner_id": owner_id},
+              {
+                "$set": {
+                  "number": 44,
+                },
+              },
+              {"upsert": true},
+            )
+         |> ignore
+       ); */
 
-  Stitch.(
-    Client.collection(db, "jobs")
-    |. Collection.find(query)
-    |. Query.execute
-    |> Js.Promise.then_(result => {
-         callback(result |> Decode.jobs);
+    Stitch.(
+      Client.collection(db, "jobs")
+      |. Collection.find(query)
+      |. Query.execute
+      |> Js.Promise.then_(result => {
+           %raw
+           {| window.result = result|};
+           callback(result |> JobData.Decode.jobs);
 
-         Js.Promise.resolve();
-       })
-    |> ignore
-  );
+           Js.Promise.resolve();
+         })
+      |> ignore
+    );
+  };
+
+  let delete = (~id: string, ~callback) => {
+    let client = getClient();
+    let db = getDb();
+
+    let owner_id = Stitch.Client.authedId(client);
+
+    Stitch.(
+      Client.collection(db, "jobs")
+      |. Collection.deleteOne({"owner_id": owner_id, "id": id})
+    );
+  };
+
+  let create = (~job: JobData.job) => {
+    let client = getClient();
+    let db = getDb();
+
+    let owner_id = Stitch.Client.authedId(client);
+
+    let data = job |> JobData.Encode.job;
+
+    Stitch.(Client.collection(db, "jobs") |. Collection.insertOne(data));
+  };
 };
 
 let createStitchClient = done_ =>

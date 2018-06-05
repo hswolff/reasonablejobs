@@ -23,11 +23,21 @@ module Collection = {
     (tCollection, 'findQuery, 'updateQuery, 'options) =>
     Js.Promise.t(Js.Json.t) =
     "";
+  [@bs.send]
+  external deleteOne :
+    (tCollection, 'filter) => Js.Promise.t({. deletedCount: int}) =
+    "";
+  [@bs.send]
+  external insertOne :
+    (tCollection, 'document) => Js.Promise.t({. insertedId: int}) =
+    "";
 };
 
 module Query = {
   [@bs.send] external execute : tQuery => Js.Promise.t(Js.Json.t) = "";
 };
+
+[@bs.send] external toString : Js.Json.t => option(string) = "";
 
 %raw
 {|

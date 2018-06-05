@@ -1,4 +1,4 @@
-type homepageJobs = array(JobData.test);
+type homepageJobs = array(JobData.job);
 
 type state = {jobs: homepageJobs};
 
@@ -16,7 +16,7 @@ module Style = {
 let make = _children => {
   ...component,
   initialState: () => {jobs: [||]},
-  didMount: self => API.fetchJobs(jobs => self.send(Data(jobs))),
+  didMount: self => API.Job.getAll(jobs => self.send(Data(jobs))),
   reducer: (action, _state) =>
     switch (action) {
     | Data(jobs) => ReasonReact.Update({jobs: jobs})
@@ -26,13 +26,20 @@ let make = _children => {
       <div className=Style.title> (ReasonReact.string("Home Page")) </div>
       (
         self.state.jobs
-        |> Array.mapi((index, job: JobData.test) =>
-             <JobCell key=(string_of_int(index)) title=job.owner_id />
+        |> Array.mapi((index, job: JobData.job) =>
+             <JobCell
+               key=(
+                 switch (job.id) {
+                 | Some(id) =>
+                   Js.log(id);
+                   id;
+                 | None => string_of_int(index)
+                 }
+               )
+               job
+             />
            )
         |> ReasonReact.array
       )
-      <JobCell title="Job 1" />
-      <br />
-      <JobCell title="Job 2" />
     </UI.Content>,
 };
