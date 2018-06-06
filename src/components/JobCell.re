@@ -15,11 +15,11 @@ module Style = {
     );
 };
 
-let make = (~job: JobData.job, _children) => {
+let make = (~job: JobData.job, ~onDeleted: unit => unit, _children) => {
   let delete = _e =>
     switch (job.id) {
     | Some(id) =>
-      API.Job.delete(~id, ~callback=() => Js.log("Deleted!")) |> ignore
+      API.Job.delete(~id, ~callback=_result => onDeleted()) |> ignore
     | None => Js.log("No id exists to delete")
     };
 
