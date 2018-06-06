@@ -30,8 +30,8 @@ module Link = {
 
   let getPath = (routerPath: list(string)) =>
     switch (routerPath) {
-    | [path, ..._rest] => "/" ++ path
     | [] => "/"
+    | pathList => "/" ++ String.concat("/", pathList)
     };
 
   let make =
