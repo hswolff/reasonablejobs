@@ -3,10 +3,14 @@ type tService;
 type tDb;
 type tCollection;
 type tQuery;
+type tObjectId;
 
 module Client = {
   [@bs.module "mongodb-stitch"] [@bs.scope "StitchClientFactory"]
   external create : string => Js.Promise.t(tClient) = "";
+
+  [@bs.module "mongodb-stitch"] [@bs.scope "BSON"]
+  external createObjectId : string => tObjectId = "ObjectId";
 
   [@bs.send] external login : tClient => Js.Promise.t(unit) = "";
   [@bs.send] external authedId : tClient => string = "";
