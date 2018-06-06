@@ -23,12 +23,10 @@ let make = _children => {
   render: self =>
     <div>
       <Header />
-      <UI.Content>
-        <span> (ReasonReact.string("Content")) </span>
-      </UI.Content>
       (
         switch (self.state.path) {
         | ["job", "post"] => <CreateJobPage />
+        | ["account"] => <AccountPage />
         | _ => <HomePage />
         }
       )

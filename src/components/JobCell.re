@@ -11,6 +11,7 @@ module Style = {
         border(px(1), solid, black),
         padding(px(10)),
         borderRadius(px(4)),
+        margin2(~v=px(20), ~h=auto),
       ])
     );
 };

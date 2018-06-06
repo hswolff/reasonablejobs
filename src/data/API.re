@@ -14,12 +14,12 @@ let getDb = () =>
   };
 
 module Job = {
-  let getAll = callback => {
+  let get = (query, callback) => {
     let db = getDb();
 
     Stitch.(
       Client.collection(db, "jobs")
-      |. Collection.find(Js.Obj.empty)
+      |. Collection.find(query)
       |. Query.execute
       |> Js.Promise.then_(result => {
            callback(result |> JobData.Decode.jobs);
@@ -29,6 +29,8 @@ module Job = {
       |> ignore
     );
   };
+
+  let getAll = callback => get(Js.Obj.empty, callback);
 
   let delete = (~id: string, ~callback) => {
     let db = getDb();
