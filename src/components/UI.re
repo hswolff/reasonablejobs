@@ -43,7 +43,7 @@ module Link = {
       initialState: () => {
         active: isActive(ReasonReact.Router.dangerouslyGetInitialUrl().path),
       },
-      reducer: (action, state) =>
+      reducer: (action, _state) =>
         switch (action) {
         | Active => ReasonReact.Update({active: true})
         | InActive => ReasonReact.Update({active: false})

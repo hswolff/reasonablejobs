@@ -23,13 +23,18 @@ let make = (~job: JobData.job, ~onDeleted: unit => unit, _children) => {
     | None => Js.log("No id exists to delete")
     };
 
+  let isOwner = job.owner_id == Stitch.Client.authedId(API.getClient());
   {
     ...component,
     render: _self =>
       <div className=Style.container>
         <div className="left"> (string(job.position.title)) </div>
         <div className="right">
-          <button onClick=delete> (string("Delete")) </button>
+          (
+            isOwner ?
+              <button onClick=delete> (string("Delete")) </button> :
+              ReasonReact.null
+          )
         </div>
       </div>,
   };
