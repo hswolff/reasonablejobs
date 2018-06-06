@@ -4,7 +4,7 @@ let string = ReasonReact.string;
 
 module Style = {
   open Css;
-  let container = style([margin2(~v=px(20), ~h=auto)]);
+  let container = style([margin3(~top=px(10), ~h=auto, ~bottom=px(20))]);
   let title =
     style([color(hex("444")), fontSize(px(68)), textAlign(center)]);
   let nav =
