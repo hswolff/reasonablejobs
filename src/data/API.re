@@ -14,7 +14,7 @@ let getDb = () =>
   };
 
 module Job = {
-  let get = (query, callback) => {
+  let get = (query, callback: array(JobData.job) => unit) => {
     let db = getDb();
 
     Stitch.(
@@ -30,7 +30,7 @@ module Job = {
     );
   };
 
-  let getAll = callback => get(Js.Obj.empty, callback);
+  let getAll = get(Js.Obj.empty);
 
   let delete = (~id: string, ~callback) => {
     let db = getDb();
