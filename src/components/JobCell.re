@@ -29,7 +29,15 @@ let make = (~job: JobData.job, ~onDeleted: unit => unit, _children) => {
     ...component,
     render: _self =>
       <div className=Style.container>
-        <div className="left"> (string(job.position.title)) </div>
+        <div className="left">
+          (string(job.position.title))
+          <br />
+          <pre style=(ReactDOMRe.Style.make(~fontSize="8px", ()))>
+            (
+              string(Js.Json.stringifyWithSpace(job |> JobData.Encode.job, 2))
+            )
+          </pre>
+        </div>
         <div className="right">
           (
             isOwner ?
