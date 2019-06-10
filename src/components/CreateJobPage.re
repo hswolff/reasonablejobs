@@ -15,8 +15,7 @@ type action =
   | U_Company_Email(string)
   | U_Company_Description(string)
   | SubmitForm
-  | ResetForm
-  | None;
+  | ResetForm;
 
 let component = ReasonReact.reducerComponent("CreateJobPage");
 
@@ -128,13 +127,13 @@ let make = _children => {
           description,
         },
       })
-    | None => ReasonReact.NoUpdate
     },
   render: self =>
     <UI.Content>
       <h1> (str("Create a Job")) </h1>
       <br />
       <h2> (str("Position")) </h2>
+      <Input />
       <input
         value=self.state.position.title
         placeholder="Title"
