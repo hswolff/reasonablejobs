@@ -1,10 +1,3 @@
-[%bs.raw {|require('./index.css')|}];
-
-[@bs.module "./registerServiceWorker"]
-external register_service_worker : unit => unit = "default";
-
-API.createStitchClient(() => {
-  ReactDOMRe.renderToElementWithId(<App />, "root");
-
-  register_service_worker();
-});
+API.createStitchClient(() =>
+  ReactDOMRe.renderToElementWithId(<App />, "root")
+);

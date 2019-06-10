@@ -4,7 +4,7 @@
     "dir": "src",
     "subdirs": true
   }],
-  "bs-dependencies": ["reason-react", "@glennsl/bs-jest", "bs-css", "@glennsl/bs-json"],
+  "bs-dependencies": ["reason-react", "bs-css", "@glennsl/bs-json"],
   "reason": {
     "react-jsx": 2
   },
