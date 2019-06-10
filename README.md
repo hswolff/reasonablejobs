@@ -9,7 +9,7 @@ yarn
 ## Develop
 
 ```
-npx npm-run-all --parallel start server
+npm run dev
 ```
 
 Open: http://localhost:8000/
