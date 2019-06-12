@@ -68,7 +68,7 @@ module Link = {
             "href": href,
             "className": self.state.active ? activeClassName : className,
             "onClick": e => {
-              ReactEventRe.Mouse.preventDefault(e);
+              e->ReactEvent.Mouse.preventDefault;
               ReasonReact.Router.push(href);
             },
           },

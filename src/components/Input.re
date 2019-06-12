@@ -10,8 +10,8 @@ let make = _children => {
   initialState: () => {options: ""},
   reducer: (action, _state) =>
     switch (action) {
-    | Input(nextValue) => ReasonReact.NoUpdate
+    | Input(_nextValue) => ReasonReact.NoUpdate
     },
   render: self =>
-    <div> (ReasonReact.string("hello" ++ self.state.options)) </div>,
+    <div> {ReasonReact.string("hello" ++ self.state.options)} </div>,
 };

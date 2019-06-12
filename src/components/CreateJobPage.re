@@ -37,9 +37,7 @@ let createJob = ({ReasonReact.state, send}) => {
   |> ignore;
 };
 
-let getFormValue = e => ReactDOMRe.domElementToObj(
-                          ReactEventRe.Form.target(e),
-                        )##value;
+let getFormValue = e => ReactEvent.Form.target(e)##value;
 
 let getInitialState = () => {
   position: {
@@ -130,57 +128,57 @@ let make = _children => {
     },
   render: self =>
     <UI.Content>
-      <h1> (str("Create a Job")) </h1>
+      <h1> {str("Create a Job")} </h1>
       <br />
-      <h2> (str("Position")) </h2>
+      <h2> {str("Position")} </h2>
       <Input />
       <input
-        value=self.state.position.title
+        value={self.state.position.title}
         placeholder="Title"
-        onChange=(e => self.send(U_Position_Title(getFormValue(e))))
+        onChange={e => self.send(U_Position_Title(getFormValue(e)))}
       />
       <input
-        value=self.state.position.location
+        value={self.state.position.location}
         placeholder="Location"
-        onChange=(e => self.send(U_Position_Location(getFormValue(e))))
+        onChange={e => self.send(U_Position_Location(getFormValue(e)))}
       />
       <input
-        value=self.state.position.description
+        value={self.state.position.description}
         placeholder="Description"
-        onChange=(e => self.send(U_Position_Description(getFormValue(e))))
+        onChange={e => self.send(U_Position_Description(getFormValue(e)))}
       />
       <input
-        value=self.state.position.applyInstructions
+        value={self.state.position.applyInstructions}
         placeholder="Apply Instructions"
-        onChange=(
-          e => self.send(U_Position_ApplyInstructions(getFormValue(e)))
-        )
+        onChange={e =>
+          self.send(U_Position_ApplyInstructions(getFormValue(e)))
+        }
       />
       <br />
-      <h2> (str("Company")) </h2>
+      <h2> {str("Company")} </h2>
       <input
-        value=self.state.company.name
+        value={self.state.company.name}
         placeholder="Name"
-        onChange=(e => self.send(U_Company_Name(getFormValue(e))))
+        onChange={e => self.send(U_Company_Name(getFormValue(e)))}
       />
       <input
-        value=self.state.company.url
+        value={self.state.company.url}
         placeholder="Url"
-        onChange=(e => self.send(U_Company_Url(getFormValue(e))))
+        onChange={e => self.send(U_Company_Url(getFormValue(e)))}
       />
       <input
-        value=self.state.company.email
+        value={self.state.company.email}
         placeholder="Email"
-        onChange=(e => self.send(U_Company_Email(getFormValue(e))))
+        onChange={e => self.send(U_Company_Email(getFormValue(e)))}
       />
       <input
-        value=self.state.company.description
+        value={self.state.company.description}
         placeholder="Description"
-        onChange=(e => self.send(U_Company_Description(getFormValue(e))))
+        onChange={e => self.send(U_Company_Description(getFormValue(e)))}
       />
       <br />
-      <button onClick=(_e => self.send(SubmitForm))>
-        (str("Create!"))
+      <button onClick={_e => self.send(SubmitForm)}>
+        {str("Create!")}
       </button>
     </UI.Content>,
 };
