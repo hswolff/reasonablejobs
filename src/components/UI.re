@@ -17,9 +17,12 @@ module Content = {
       ) => {
     ...component,
     render: _self =>
-      ReasonReact.createDomElement(
+      ReactDOMRe.createElementVariadic(
         tagName,
-        ~props={"className": String.concat(" ", [container, className])},
+        ~props=
+          ReactDOMRe.objToDOMProps({
+            "className": String.concat(" ", [container, className]),
+          }),
         children,
       ),
   };
@@ -62,16 +65,17 @@ module Link = {
         self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
       },
       render: self =>
-        ReasonReact.createDomElement(
+        ReactDOMRe.createElementVariadic(
           asTag,
-          ~props={
-            "href": href,
-            "className": self.state.active ? activeClassName : className,
-            "onClick": e => {
-              e->ReactEvent.Mouse.preventDefault;
-              ReasonReact.Router.push(href);
-            },
-          },
+          ~props=
+            ReactDOMRe.objToDOMProps({
+              "href": href,
+              "className": self.state.active ? activeClassName : className,
+              "onClick": e => {
+                ReactEvent.Mouse.preventDefault(e);
+                ReasonReact.Router.push(href);
+              },
+            }),
           children,
         ),
     };
