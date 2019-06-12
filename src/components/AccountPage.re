@@ -29,25 +29,23 @@ let make = _children => {
       },
     render: self =>
       <UI.Content tagName="header">
-        <div className=Style.title> (ReasonReact.string("Account")) </div>
-        <div> (ReasonReact.string("Just the Jobs you have posted")) </div>
+        <div className=Style.title> {ReasonReact.string("Account")} </div>
+        <div> {ReasonReact.string("Just the Jobs you have posted")} </div>
         <br />
-        (
-          self.state.jobs
-          |> Array.mapi((index, job: JobData.job) =>
-               <JobCell
-                 key=(
-                   switch (job.id) {
-                   | Some(id) => id
-                   | None => string_of_int(index)
-                   }
-                 )
-                 job
-                 onDeleted=(self.handle(loadJobs))
-               />
-             )
-          |> ReasonReact.array
-        )
+        {self.state.jobs
+         |> Array.mapi((index, job: JobData.job) =>
+              <JobCell
+                key={
+                  switch (job.id) {
+                  | Some(id) => id
+                  | None => string_of_int(index)
+                  }
+                }
+                job
+                onDeleted={self.handle(loadJobs)}
+              />
+            )
+         |> ReasonReact.array}
       </UI.Content>,
   };
 };

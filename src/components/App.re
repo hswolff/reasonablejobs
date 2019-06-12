@@ -23,12 +23,10 @@ let make = _children => {
   render: self =>
     <div>
       <Header />
-      (
-        switch (self.state.path) {
-        | ["job", "post"] => <CreateJobPage />
-        | ["account"] => <AccountPage />
-        | _ => <HomePage />
-        }
-      )
+      {switch (self.state.path) {
+       | ["job", "post"] => <CreateJobPage />
+       | ["account"] => <AccountPage />
+       | _ => <HomePage />
+       }}
     </div>,
 };
