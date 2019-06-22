@@ -1,32 +1,20 @@
-type state = {path: list(string)};
+[@react.component]
+let make = _ => {
+  let (path, setPath) =
+    React.useState(_ => ReasonReact.Router.dangerouslyGetInitialUrl().path);
 
-type action =
-  | Route(list(string));
-
-let component = ReasonReact.reducerComponent("App");
-
-let make = _children => {
-  ...component,
-  initialState: () => {
-    path: ReasonReact.Router.dangerouslyGetInitialUrl().path,
-  },
-  reducer: (action, _state) =>
-    switch (action) {
-    | Route(path) => ReasonReact.Update({path: path})
-    },
-  didMount: self => {
-    let watcherID =
-      ReasonReact.Router.watchUrl(url => self.send(Route(url.path)));
+  React.useEffect0(_ => {
+    let watcherID = ReasonReact.Router.watchUrl(url => setPath(_ => url.path));
     ();
-    self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
-  },
-  render: self =>
-    <div>
-      <Header />
-      {switch (self.state.path) {
-       | ["job", "post"] => <CreateJobPage />
-       | ["account"] => <AccountPage />
-       | _ => <HomePage />
-       }}
-    </div>,
+    Some(() => ReasonReact.Router.unwatchUrl(watcherID));
+  });
+
+  <div>
+    <Header />
+    {switch (path) {
+     | ["job", "post"] => <CreateJobPage />
+     | ["account"] => <AccountPage />
+     | _ => <HomePage />
+     }}
+  </div>;
 };

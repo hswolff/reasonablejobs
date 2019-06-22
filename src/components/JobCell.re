@@ -1,5 +1,3 @@
-let component = ReasonReact.statelessComponent("JobCell");
-
 let string = ReasonReact.string;
 
 module Style = {
@@ -16,7 +14,8 @@ module Style = {
     );
 };
 
-let make = (~job: JobData.job, ~onDeleted: unit => unit, _children) => {
+[@react.component]
+let make = (~job: JobData.job, ~onDeleted: unit => unit) => {
   let delete = _e =>
     switch (job.id) {
     | Some(id) =>
@@ -25,22 +24,19 @@ let make = (~job: JobData.job, ~onDeleted: unit => unit, _children) => {
     };
 
   let isOwner = job.owner_id == Stitch.Client.authedId(API.getClient());
-  {
-    ...component,
-    render: _self =>
-      <div className=Style.container>
-        <div className="left">
-          {string(job.position.title)}
-          <br />
-          <pre style={ReactDOMRe.Style.make(~fontSize="8px", ())}>
-            {string(Js.Json.stringifyWithSpace(job |> JobData.Encode.job, 2))}
-          </pre>
-        </div>
-        <div className="right">
-          {isOwner
-             ? <button onClick=delete> {string("Delete")} </button>
-             : ReasonReact.null}
-        </div>
-      </div>,
-  };
+
+  <div className=Style.container>
+    <div className="left">
+      {string(job.position.title)}
+      <br />
+      <pre style={ReactDOMRe.Style.make(~fontSize="8px", ())}>
+        {string(Js.Json.stringifyWithSpace(job |> JobData.Encode.job, 2))}
+      </pre>
+    </div>
+    <div className="right">
+      {isOwner
+         ? <button onClick=delete> {string("Delete")} </button>
+         : ReasonReact.null}
+    </div>
+  </div>;
 };

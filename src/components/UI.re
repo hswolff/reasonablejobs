@@ -1,6 +1,4 @@
-[@bs.config {jsx: 3}];
-
-module Content3 = {
+module Content = {
   let container =
     Css.(
       style([
@@ -19,16 +17,7 @@ module Content3 = {
   };
 };
 
-module Content = {
-  let make = (~tagName="div", ~className="", children) =>
-    ReasonReactCompat.wrapReactForReasonReact(
-      Content3.make,
-      Content3.makeProps(~tagName, ~className, ~children=React.null, ()),
-      children,
-    );
-};
-
-module Link3 = {
+module Link = {
   let getPath = (routerPath: list(string)) =>
     switch (routerPath) {
     | [] => "/"
@@ -71,21 +60,4 @@ module Link3 = {
       [|children|],
     );
   };
-};
-
-module Link = {
-  let make =
-      (~asTag="a", ~href, ~className="", ~activeClassName="active", children) =>
-    ReasonReactCompat.wrapReactForReasonReact(
-      Link3.make,
-      Link3.makeProps(
-        ~asTag,
-        ~href,
-        ~className,
-        ~activeClassName,
-        ~children=React.null,
-        (),
-      ),
-      children,
-    );
 };

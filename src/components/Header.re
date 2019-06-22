@@ -1,5 +1,3 @@
-let component = ReasonReact.statelessComponent("Header");
-
 let string = ReasonReact.string;
 
 module Style = {
@@ -15,17 +13,14 @@ module Style = {
     ]);
 };
 
-let make = _children => {
-  ...component,
-  render: _self =>
-    <UI.Content tagName="header" className=Style.container>
-      <div className=Style.title> {string("Reasonable Jobs")} </div>
-      <nav className=Style.nav>
-        <UI.Link href="/"> {ReasonReact.string("Home")} </UI.Link>
-        <UI.Link href="/job/post">
-          {ReasonReact.string("Post a Job")}
-        </UI.Link>
-        <UI.Link href="/account"> {ReasonReact.string("Account")} </UI.Link>
-      </nav>
-    </UI.Content>,
+[@react.component]
+let make = _ => {
+  <UI.Content tagName="header" className=Style.container>
+    <div className=Style.title> {string("Reasonable Jobs")} </div>
+    <nav className=Style.nav>
+      <UI.Link href="/"> {ReasonReact.string("Home")} </UI.Link>
+      <UI.Link href="/job/post"> {ReasonReact.string("Post a Job")} </UI.Link>
+      <UI.Link href="/account"> {ReasonReact.string("Account")} </UI.Link>
+    </nav>
+  </UI.Content>;
 };
