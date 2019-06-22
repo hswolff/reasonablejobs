@@ -20,8 +20,6 @@ module Content3 = {
 };
 
 module Content = {
-  let component = ReasonReact.statelessComponent("Image");
-  /* `children` is not labelled, as it is a regular parameter in version 2 of JSX */
   let make = (~tagName="div", ~className="", children) =>
     ReasonReactCompat.wrapReactForReasonReact(
       Content3.make,
@@ -30,56 +28,64 @@ module Content = {
     );
 };
 
-module Link = {
-  type state = {active: bool};
-  type action =
-    | Active
-    | InActive;
-
-  let component = ReasonReact.reducerComponent("Link");
-
+module Link3 = {
   let getPath = (routerPath: list(string)) =>
     switch (routerPath) {
     | [] => "/"
     | pathList => "/" ++ String.concat("/", pathList)
     };
 
+  [@react.component]
   let make =
-      (~asTag="a", ~href, ~className="", ~activeClassName="active", children) => {
+      (~asTag="a", ~href, ~className="", ~activeClassName="active", ~children) => {
     let isActive = path => getPath(path) == href;
 
-    {
-      ...component,
-      initialState: () => {
-        active: isActive(ReasonReact.Router.dangerouslyGetInitialUrl().path),
-      },
-      reducer: (action, _state) =>
-        switch (action) {
-        | Active => ReasonReact.Update({active: true})
-        | InActive => ReasonReact.Update({active: false})
-        },
-      didMount: self => {
-        let watcherID =
-          ReasonReact.Router.watchUrl(url =>
-            self.send(isActive(url.path) ? Active : InActive)
-          );
-        ();
-        self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
-      },
-      render: self =>
-        ReactDOMRe.createElementVariadic(
-          asTag,
-          ~props=
-            ReactDOMRe.objToDOMProps({
-              "href": href,
-              "className": self.state.active ? activeClassName : className,
-              "onClick": e => {
-                ReactEvent.Mouse.preventDefault(e);
-                ReasonReact.Router.push(href);
-              },
-            }),
-          children,
-        ),
+    let (active, setActive) =
+      React.useState(_ =>
+        isActive(ReasonReact.Router.dangerouslyGetInitialUrl().path)
+      );
+
+    React.useEffect0(_ => {
+      let watcherID =
+        ReasonReact.Router.watchUrl(url =>
+          setActive(_ => isActive(url.path) ? true : false)
+        );
+      ();
+      Some(() => ReasonReact.Router.unwatchUrl(watcherID));
+    });
+
+    let onClick = e => {
+      ReactEvent.Mouse.preventDefault(e);
+      ReasonReact.Router.push(href);
     };
+
+    ReactDOMRe.createDOMElementVariadic(
+      asTag,
+      ~props=
+        ReactDOMRe.domProps(
+          ~href,
+          ~className=active ? activeClassName : className,
+          ~onClick,
+          (),
+        ),
+      [|children|],
+    );
   };
+};
+
+module Link = {
+  let make =
+      (~asTag="a", ~href, ~className="", ~activeClassName="active", children) =>
+    ReasonReactCompat.wrapReactForReasonReact(
+      Link3.make,
+      Link3.makeProps(
+        ~asTag,
+        ~href,
+        ~className,
+        ~activeClassName,
+        ~children=React.null,
+        (),
+      ),
+      children,
+    );
 };
