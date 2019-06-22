@@ -1,4 +1,6 @@
-module Content = {
+[@bs.config {jsx: 3}];
+
+module Content3 = {
   let container =
     Css.(
       style([
@@ -7,25 +9,25 @@ module Content = {
       ])
     );
 
-  let component = ReasonReact.statelessComponent("Content");
-
-  let make =
-      (
-        ~tagName="div",
-        ~className="",
-        children: array(ReasonReact.reactElement),
-      ) => {
-    ...component,
-    render: _self =>
-      ReactDOMRe.createElementVariadic(
-        tagName,
-        ~props=
-          ReactDOMRe.objToDOMProps({
-            "className": String.concat(" ", [container, className]),
-          }),
-        children,
-      ),
+  [@react.component]
+  let make = (~tagName="div", ~className="", ~children) => {
+    ReactDOMRe.createDOMElementVariadic(
+      tagName,
+      ~props=ReactDOMRe.domProps(~className, ()),
+      [|children|],
+    );
   };
+};
+
+module Content = {
+  let component = ReasonReact.statelessComponent("Image");
+  /* `children` is not labelled, as it is a regular parameter in version 2 of JSX */
+  let make = (~tagName="div", ~className="", children) =>
+    ReasonReactCompat.wrapReactForReasonReact(
+      Content3.make,
+      Content3.makeProps(~tagName, ~className, ~children=React.null, ()),
+      children,
+    );
 };
 
 module Link = {

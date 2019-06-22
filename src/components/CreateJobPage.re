@@ -131,7 +131,7 @@ let make = _children => {
       <h1> {str("Create a Job")} </h1>
       <br />
       <h2> {str("Position")} </h2>
-      <Input />
+      <Input.Jsx2 name="Ok" />
       <input
         value={self.state.position.title}
         placeholder="Title"
