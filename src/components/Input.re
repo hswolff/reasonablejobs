@@ -1,17 +1,24 @@
-type state = {options: string};
+[@bs.config {jsx: 3}];
 
-type action =
-  | Input(string);
+[@react.component]
+let make = (~name) => {
+  let (count, setCount) = React.useState(() => 0);
 
-let component = ReasonReact.reducerComponent("Input");
+  <div>
+    {ReasonReact.string("hello" ++ name ++ string_of_int(count))}
+    <button onClick={_ => setCount(_ => count + 1)}>
+      {React.string("Click me")}
+    </button>
+  </div>;
+};
 
-let make = _children => {
-  ...component,
-  initialState: () => {options: ""},
-  reducer: (action, _state) =>
-    switch (action) {
-    | Input(_nextValue) => ReasonReact.NoUpdate
-    },
-  render: self =>
-    <div> {ReasonReact.string("hello" ++ self.state.options)} </div>,
+module Jsx2 = {
+  let component = ReasonReact.statelessComponent("Image");
+  /* `children` is not labelled, as it is a regular parameter in version 2 of JSX */
+  let make = (~name, children) =>
+    ReasonReactCompat.wrapReactForReasonReact(
+      make,
+      makeProps(~name, ()),
+      children,
+    );
 };
